@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { micromark } from "micromark";
 import { gfm, gfmHtml } from "micromark-extension-gfm";
-import { computed, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useTaskStore } from "@/stores/tasks";
 import EditTask from "./EditTask.vue";
+import TaskBadgesVue from "./TaskBadges.vue";
 const taskStore = useTaskStore();
 const byDate = computed(() => taskStore.byDate);
 const dateFormat = new Intl.DateTimeFormat([], {
@@ -11,7 +12,7 @@ const dateFormat = new Intl.DateTimeFormat([], {
   month: "long",
   day: "numeric",
 });
-const isEditing = ref(false);
+const isEditing = reactive(new Set());
 function deleteTask(id: string) {
   taskStore.deleteTask(id);
 }
@@ -51,13 +52,14 @@ function parseMarkdown(markdown: string) {
             <div class="custom-checkbox">
               <input type="checkbox" v-model="task.done" />
               <label></label>
+              <TaskBadgesVue :task="task" />
               {{ task.text }}
             </div>
           </summary>
           <EditTask
-            v-if="isEditing"
+            v-if="isEditing.has(task.id)"
             :task="task"
-            @doneEditing="isEditing = false"
+            @doneEditing="isEditing.delete(task.id)"
           />
           <div class="collapse-content" v-else>
             <div class="btn-group">
@@ -68,10 +70,13 @@ function parseMarkdown(markdown: string) {
               >
                 {{ task.done ? "Unfinished" : "Done" }}
               </button>
-              <button class="btn" @click="isEditing = true">Edit</button>
+              <button class="btn" @click="isEditing.add(task.id)">Edit</button>
               <button class="btn btn-danger" @click="deleteTask(task.id)">
                 Delete
               </button>
+            </div>
+            <div class="mt-15">
+              <TaskBadgesVue :task="task" />
             </div>
             <div
               v-if="task.notes"
