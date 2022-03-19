@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 
 export interface Task {
-  id: string;
   text: string;
   date: string;
   done?: boolean;
@@ -29,19 +28,17 @@ function createId() {
 
 export const useTaskStore = defineStore("tasks", {
   state: () => {
-    return { tasks: JSON.parse(window.localStorage.getItem("tasks") || "") };
+    return { tasks: JSON.parse(window.localStorage.getItem("tasks") || "{}") };
   },
   getters: {
-    byDate: (state: State): Map<number, [Task]> => {
-      const grouped: Map<number, [Task]> = new Map();
-      for (const task of Object.values(state.tasks)) {
+    byDate: (state: State): Map<number, Map<string, Task>> => {
+      const grouped: Map<number, Map<string, Task>> = new Map();
+      for (const [id, task] of Object.entries(state.tasks)) {
         const taskDate = parseDate(task.date).getTime();
-        let arr = null;
-        if ((arr = grouped.get(taskDate))) {
-          arr.push(task);
-        } else {
-          grouped.set(taskDate, [task]);
+        if (!grouped.get(taskDate)) {
+          grouped.set(taskDate, new Map());
         }
+        grouped.get(taskDate)?.set(id, task);
       }
       return new Map([...grouped.entries()].sort((a, b) => a[0] - b[0]));
     },
@@ -65,7 +62,7 @@ export const useTaskStore = defineStore("tasks", {
     },
     createTask(text: string, date: string): string {
       const newId = createId();
-      this.tasks[newId] = { id: newId, text, date, done: false };
+      this.tasks[newId] = { text, date, done: false };
       this.saveTasks();
       return newId;
     },

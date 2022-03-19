@@ -42,10 +42,10 @@ function parseMarkdown(markdown: string) {
       <h1 class="content-title">{{ dateFormat.format(new Date(date)) }}</h1>
       <div class="collapse-group">
         <details
-          v-for="task in tasks"
-          :key="task.id"
+          v-for="[id, task] in tasks.entries()"
+          :key="id"
           class="collapse-panel"
-          @toggle="wasOpened($event, task.id)"
+          @toggle="wasOpened($event, id)"
           :open="task.open"
         >
           <summary class="collapse-header">
@@ -57,21 +57,22 @@ function parseMarkdown(markdown: string) {
             </div>
           </summary>
           <EditTask
-            v-if="isEditing.has(task.id)"
+            v-if="isEditing.has(id)"
+            :id="id"
             :task="task"
-            @doneEditing="isEditing.delete(task.id)"
+            @doneEditing="isEditing.delete(id)"
           />
           <div class="collapse-content" v-else>
             <div class="btn-group">
               <button
                 class="btn"
                 :class="{ 'btn-success': !task.done }"
-                @click="toggleTask(task.id)"
+                @click="toggleTask(id)"
               >
                 {{ task.done ? "Unfinished" : "Done" }}
               </button>
-              <button class="btn" @click="isEditing.add(task.id)">Edit</button>
-              <button class="btn btn-danger" @click="deleteTask(task.id)">
+              <button class="btn" @click="isEditing.add(id)">Edit</button>
+              <button class="btn btn-danger" @click="deleteTask(id)">
                 Delete
               </button>
             </div>

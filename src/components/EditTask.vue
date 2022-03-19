@@ -3,15 +3,14 @@ import { computed } from "vue";
 import { useTaskStore } from "@/stores/tasks";
 
 const emit = defineEmits(["doneEditing"]);
-const props = defineProps(["task"]);
+const props = defineProps(["task", "id"]);
 
 const task = computed(() => Object.assign({}, props.task));
 
 const taskStore = useTaskStore();
 
 function updateTask() {
-  console.log(task);
-  taskStore.updateTask(task.value.id, task.value);
+  taskStore.updateTask(props.id, task.value);
   emit("doneEditing");
 }
 </script>
@@ -27,8 +26,8 @@ function updateTask() {
       </div>
       <div class="form-group">
         <div class="custom-checkbox">
-          <input type="checkbox" v-model="task.done" :id="`check-${task.id}`" />
-          <label :for="`check-${task.id}`">Done</label>
+          <input type="checkbox" v-model="task.done" :id="`check-${id}`" />
+          <label :for="`check-${id}`">Done</label>
         </div>
       </div>
       <div class="form-group">

@@ -1,7 +1,8 @@
 import type { Task } from "@/stores/tasks";
 import type { Badge } from "@/components/TaskBadges.vue";
 
-const repositoryRe = /[Gg]ithub:(\w+\/\w+)/g;
+// This may match too much stuff
+const repositoryRe = /[Gg]ithub:([\w-]+\/.+?)(?:[ ]|$)/g;
 
 export default function* (task: Task): Generator<Badge> {
   for (const match of task.text.matchAll(repositoryRe)) {
