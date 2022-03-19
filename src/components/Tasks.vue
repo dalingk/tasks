@@ -38,6 +38,7 @@ function parseMarkdown(markdown: string) {
   <div>
     <div class="content" v-if="byDate.size == 0">
       <h1 class="content-title">No Tasks!</h1>
+      <p>Go outside and enjoy the <code class="code">$weather</code>.</p>
     </div>
     <div class="content" v-for="[date, tasks] in byDate" :key="date">
       <h1 class="content-title">{{ dateFormat.format(new Date(date)) }}</h1>
