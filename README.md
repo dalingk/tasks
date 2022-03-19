@@ -39,6 +39,13 @@ yarn dev
 yarn build
 ```
 
+You may not want to dedicate an entire virtual host just for a simple task tracker. Modify the `package.json` build script to include a `--base` argument to `vite build` that specifies where you would like this application to be mounted.
+
+An example would be:
+```
+vue-tsc --noEmit && vite build --base=/tasks/
+```
+
 ### Lint with [ESLint](https://eslint.org/)
 
 ```sh
