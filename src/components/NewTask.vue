@@ -4,10 +4,18 @@ import { useTaskStore } from "@/stores/tasks";
 
 const taskStore = useTaskStore();
 
-const newTask = reactive({ text: "", date: "" });
+const today = new Date();
+const todayString = [
+  today.getFullYear(),
+  (today.getMonth() + 1).toString().padStart(2, "0"),
+  today.getDate().toString().padStart(2, "0"),
+].join("-");
+
+const newTask = reactive({ text: "", date: todayString });
 
 function addNewTask() {
   taskStore.createTask(newTask.text, newTask.date);
+  newTask.text = "";
 }
 </script>
 
