@@ -5,6 +5,7 @@ import { computed, reactive } from "vue";
 import { useTaskStore } from "@/stores/tasks";
 import EditTask from "./EditTask.vue";
 import TaskBadgesVue from "./TaskBadges.vue";
+import { gfmTableClassHtml } from "@/util/MicromarkGFMTable";
 const taskStore = useTaskStore();
 const byDate = computed(() => taskStore.byDate);
 const dateFormat = new Intl.DateTimeFormat([], {
@@ -28,7 +29,7 @@ function wasOpened(event: Event, id: string) {
 function parseMarkdown(markdown: string) {
   return micromark(markdown, {
     extensions: [gfm()],
-    htmlExtensions: [gfmHtml()],
+    htmlExtensions: [gfmHtml(), gfmTableClassHtml],
   });
 }
 </script>
