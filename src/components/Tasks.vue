@@ -52,7 +52,7 @@ function parseMarkdown(markdown: string) {
         >
           <summary class="collapse-header">
             <div class="custom-checkbox">
-              <input type="checkbox" v-model="task.done" />
+              <input type="checkbox" v-model="task.done" disabled />
               <label></label>
               <TaskBadgesVue :task="task" />
               {{ task.text }}
@@ -65,15 +65,15 @@ function parseMarkdown(markdown: string) {
             @doneEditing="isEditing.delete(id)"
           />
           <div class="collapse-content" v-else>
-            <div class="btn-group">
+            <div class="">
               <button
-                class="btn"
+                class="btn mr-10"
                 :class="{ 'btn-success': !task.done }"
                 @click="toggleTask(id)"
               >
                 {{ task.done ? "Unfinished" : "Done" }}
               </button>
-              <button class="btn" @click="isEditing.add(id)">Edit</button>
+              <button class="btn mr-10" @click="isEditing.add(id)">Edit</button>
               <button class="btn btn-danger" @click="deleteTask(id)">
                 Delete
               </button>
