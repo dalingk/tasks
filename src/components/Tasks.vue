@@ -65,7 +65,7 @@ function parseMarkdown(markdown: string) {
             @doneEditing="isEditing.delete(id)"
           />
           <div class="collapse-content" v-else>
-            <div class="">
+            <div class="d-flex">
               <button
                 class="btn mr-10"
                 :class="{ 'btn-success': !task.done }"
@@ -74,7 +74,7 @@ function parseMarkdown(markdown: string) {
                 {{ task.done ? "Unfinished" : "Done" }}
               </button>
               <button class="btn mr-10" @click="isEditing.add(id)">Edit</button>
-              <button class="btn btn-danger" @click="deleteTask(id)">
+              <button class="btn btn-danger ml-auto" @click="deleteTask(id)">
                 Delete
               </button>
             </div>
