@@ -13,7 +13,7 @@ import Tasks from "./components/Tasks.vue";
       <div class="container-xl">
         <div class="row">
           <div class="col-lg-4">
-            <div class="content position-lg-sticky top-lg-0">
+            <div class="content position-lg-sticky" style="top: 3rem">
               <NewTask />
               <ExportJSON />
             </div>
