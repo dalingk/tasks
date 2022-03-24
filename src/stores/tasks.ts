@@ -6,7 +6,7 @@ export interface Task {
   done?: boolean;
   open?: boolean;
   doneDate?: string;
-  notes?: string;
+  notes?: string | string[];
 }
 
 export interface State {
@@ -17,6 +17,20 @@ function dateString(date: Date): string {
   const padMonth = date.getMonth().toString().padStart(2, "0");
   const padDate = date.getDate().toString().padStart(2, "0");
   return `${date.getFullYear()}-${padMonth}-${padDate}`;
+}
+
+function splitNewline(input: string): string[] {
+  let lastIdx = 0;
+  let nextIdx = 0;
+  const outputArray = [];
+  while ((nextIdx = input.indexOf("\n", lastIdx)) >= 0) {
+    outputArray.push(input.slice(lastIdx, nextIdx + 1));
+    lastIdx = nextIdx + 1;
+  }
+  if (lastIdx != input.length) {
+    outputArray.push(input.slice(lastIdx, input.length));
+  }
+  return outputArray;
 }
 
 function parseDate(inputDate: string): Date {
@@ -58,7 +72,12 @@ export const useTaskStore = defineStore("tasks", {
     },
     importJSON(inputJSON: string): boolean {
       try {
-        const parsedJSON = JSON.parse(inputJSON);
+        const parsedJSON: { string: Task } = JSON.parse(inputJSON);
+        Object.values(parsedJSON).forEach((task: Task) => {
+          if (task.notes && typeof task.notes === "string") {
+            task.notes = splitNewline(task.notes);
+          }
+        });
         this.tasks = parsedJSON;
         this.saveTasks();
       } catch {
@@ -96,6 +115,15 @@ export const useTaskStore = defineStore("tasks", {
         task.doneDate = dateString(new Date());
       } else if (oldTask.done && !task.done) {
         delete task.doneDate;
+      }
+      if (
+        Object.prototype.hasOwnProperty.call(task, "notes") &&
+        typeof task.notes === "string"
+      ) {
+        task.notes = splitNewline(task.notes);
+      }
+      if (task.notes?.length === 0) {
+        delete task.notes;
       }
       this.tasks[id] = task;
       this.saveTasks();

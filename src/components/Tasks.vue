@@ -26,7 +26,10 @@ function wasOpened(event: Event, id: string) {
     taskStore.setOpen(id, target.open);
   }
 }
-function parseMarkdown(markdown: string) {
+function parseMarkdown(markdown: string | string[]) {
+  if (Array.isArray(markdown)) {
+    markdown = markdown.join("");
+  }
   return micromark(markdown, {
     extensions: [gfm()],
     htmlExtensions: [gfmHtml(), gfmTableClassHtml],

@@ -5,7 +5,13 @@ import { useTaskStore } from "@/stores/tasks";
 const emit = defineEmits(["doneEditing"]);
 const props = defineProps(["task", "id"]);
 
-const task = computed(() => Object.assign({}, props.task));
+const task = computed(() => {
+  const newTask = Object.assign({}, props.task);
+  if (newTask.notes && Array.isArray(newTask.notes)) {
+    newTask.notes = newTask.notes.join("");
+  }
+  return newTask;
+});
 
 const taskStore = useTaskStore();
 
