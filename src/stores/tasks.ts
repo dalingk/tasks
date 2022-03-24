@@ -13,6 +13,12 @@ export interface State {
   tasks: { string: Task };
 }
 
+function dateString(date: Date): string {
+  const padMonth = date.getMonth().toString().padStart(2, "0");
+  const padDate = date.getDate().toString().padStart(2, "0");
+  return `${date.getFullYear()}-${padMonth}-${padDate}`;
+}
+
 function parseDate(inputDate: string): Date {
   const [year, month, date] = inputDate
     .split(/\D/)
@@ -70,10 +76,7 @@ export const useTaskStore = defineStore("tasks", {
       const task = this.tasks[id];
       task.done = !task.done;
       if (task.done) {
-        const today = new Date();
-        const padMonth = today.getMonth().toString().padStart(2, "0");
-        const padDate = today.getDate().toString().padStart(2, "0");
-        task.doneDate = `${today.getFullYear()}-${padMonth}-${padDate}`;
+        task.doneDate = dateString(new Date());
       } else {
         delete task.doneDate;
       }
@@ -88,6 +91,12 @@ export const useTaskStore = defineStore("tasks", {
       this.saveTasks();
     },
     updateTask(id: string, task: Task) {
+      const oldTask = this.tasks[id];
+      if (!oldTask.done && task.done) {
+        task.doneDate = dateString(new Date());
+      } else if (oldTask.done && !task.done) {
+        delete task.doneDate;
+      }
       this.tasks[id] = task;
       this.saveTasks();
     },
