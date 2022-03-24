@@ -92,3 +92,9 @@ function parseMarkdown(markdown: string) {
     </div>
   </div>
 </template>
+
+<style>
+pre code {
+  white-space: normal;
+}
+</style>
