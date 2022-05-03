@@ -12,7 +12,32 @@ const dateFormat = new Intl.DateTimeFormat([], {
   weekday: "long",
   month: "long",
   day: "numeric",
+  year: "numeric",
 });
+function capitalize(string: string): string {
+  return string
+    .split(" ")
+    .map((s) => s[0].toUpperCase() + s.slice(1))
+    .join(" ");
+}
+function formatDate(date: Date): string {
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  const numDays = (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+  if (numDays >= 0 && numDays < 2) {
+    return capitalize(
+      new Intl.RelativeTimeFormat([], {
+        numeric: "auto",
+        style: "long",
+      }).format(numDays, "day")
+    );
+  } else {
+    return dateFormat.format(date);
+  }
+}
 const isEditing = reactive(new Set());
 function deleteTask(id: string) {
   taskStore.deleteTask(id);
@@ -44,7 +69,7 @@ function parseMarkdown(markdown: string | string[]) {
       <p>Go outside and enjoy the <code class="code">$weather</code>.</p>
     </div>
     <div class="content" v-for="[date, tasks] in byDate" :key="date">
-      <h1 class="content-title">{{ dateFormat.format(new Date(date)) }}</h1>
+      <h1 class="content-title">{{ formatDate(new Date(date)) }}</h1>
       <div class="collapse-group">
         <details
           v-for="[id, task] in tasks.entries()"
