@@ -14,7 +14,7 @@ export interface State {
 }
 
 function dateString(date: Date): string {
-  const padMonth = date.getMonth().toString().padStart(2, "0");
+  const padMonth = (1 + date.getMonth()).toString().padStart(2, "0");
   const padDate = date.getDate().toString().padStart(2, "0");
   return `${date.getFullYear()}-${padMonth}-${padDate}`;
 }
