@@ -1,12 +1,14 @@
 FROM node:20 as build
 
-RUN install -o node -d -m 755 /opt/build
+RUN install -o node -d -m 755 /opt/build && \
+    install -o node -d -m 755 /opt/build/.yarn
 
 WORKDIR /opt/build
 
 USER node
 
-ADD package.json yarn.lock ./
+ADD package.json yarn.lock .yarnrc.yml ./
+ADD .yarn/releases/yarn-4.0.2.cjs ./.yarn/releases/
 
 RUN yarn install
 
