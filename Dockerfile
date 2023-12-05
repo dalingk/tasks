@@ -7,14 +7,14 @@ WORKDIR /opt/build
 
 USER node
 
-ADD package.json yarn.lock .yarnrc.yml ./
-ADD .yarn/releases/yarn-4.0.2.cjs ./.yarn/releases/
+ADD --chown=node package.json yarn.lock .yarnrc.yml ./
+ADD --chown=node .yarn/releases/yarn-4.0.2.cjs ./.yarn/releases/
 
 RUN yarn install
 
-ADD tsconfig.json tsconfig.vite-config.json vite.config.mts env.d.ts index.html ./
-ADD src ./src
-ADD public ./public
+ADD --chown=node tsconfig.json tsconfig.vite-config.json vite.config.mts env.d.ts index.html ./
+ADD --chown=node src ./src
+ADD --chown=node public ./public
 
 RUN yarn run build && \
     yarn run gzip
